@@ -207,28 +207,37 @@
     
     <script>
 document.getElementById('submitBtn').addEventListener('click', function() {
+    // Basic validation (required fields)
+    if (!document.getElementById('meetingForm').checkValidity()) {
+        alert('Please fill in all required fields.');
+        return; 
+    }
+
+    // Show loading indicator
     document.getElementById('loading').style.display = 'block';
 
-    // Fetch the user's IP address
-    fetch('https://api64.ipify.org?format=json')
-        .then(response => response.json())
-        .then(data => {
-            const ip = data.ip;
+    // Get user timezone
+    const timezone = document.getElementById('timezone').innerText; 
 
-            // Include the IP address in the form data
-            const formData = new FormData(document.getElementById('meetingForm'));
-            formData.append('ip', ip);
+    const formData = new FormData(document.getElementById('meetingForm'));
+    formData.append('timezone', timezone); 
 
-            // Simulate form submission (replace this with actual form submission logic)
-            setTimeout(function() {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('success').style.display = 'block';
-                document.getElementById('meetingId').innerText = generateMeetingId();
-            }, 500); // Simulating a 2-second delay for the loading animation
-        })
-        .catch(error => {
-            console.error('Error fetching IP address:', error);
-        });
+    fetch('https://us-central1-form-submission-418811.cloudfunctions.net/submitDataToSheet', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        document.getElementById('loading').style.display = 'none';
+        if (response.ok) {
+            alert('Meeting scheduled! (Replace this with detailed success message)');
+        } else {
+            alert('Error submitting the form. Please try again later.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error submitting the form. Please try again later.');
+    });
 });
 
 
