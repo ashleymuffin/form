@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment-timezone/moment-timezone-with-data.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ipapi.co/1.0.0/ipapi.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+
+<title>Meeting Schedule Form</title>
+<style>
+    body {
+        font-family:  "Space Mono", Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #D9D9D9;
+    }
+    .container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 4px;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 5px;
+        height: 45px;
+    }
+    select {
+        height: 45px; /* To match the height of text inputs */
+        color : #555555;
+        font-size: 15px;
+    }
+
+    #notes {
+        
+
+        width: 98%;
+    border-radius: 4px;
+}
+    
+    .form-group.inline {
+        display: inline-block;
+        width: 48%;
+        margin-right: 1%;
+    }
+    .form-group.full-width {
+        width: 100%;
+    }
+    .btn {
+        display: inline-block;
+        background-color: black;
+        color: #fff;
+        border: none;
+        font-family: "Space Mono";
+        cursor: pointer;
+        border-radius: 4px;
+        text-align: center;
+        text-decoration: none;
+        padding: 15px 20px;
+        transition: background-color 0.3s ease;
+        width: 100%
+    }
+    .btn:hover {
+        background-color: #E9FF62;
+        color : black;
+    }
+    .loading {
+        display: none;
+        text-align: center;
+        margin-top: 20px;
+    }
+    .success {
+        display: none;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.timezone-label {
+    display: block;
+    margin-top: 10px;
+}
+
+
+@media only screen and (max-width: 600px) {
+    .form-group {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+        display: block;
+    }
+    .form-group.inline {
+        width: 100%;
+        margin-right: 0;
+    }
+    .form-group.inline:last-child {
+        margin-bottom: 20px;
+    }
+}
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <h2>Meeting Schedule Form</h2>
+        <form id="meetingForm" action="#" method="post">
+            <div class="form-group inline">
+                <label for="name">Their Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter Your Name" required>
+            </div>
+            <div class="form-group inline">
+                <label for="phone">Phone</label>
+                <input type="text" id="phone" name="phone" placeholder="Enter Your Phone Number" required>
+            </div>
+            <div class="form-group inline">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter Your Email Address" required>
+            </div>
+            <div class="form-group inline">
+                <label for="url">Website URL</label>
+                <input type="url" id="url" name="url" placeholder="Enter Your Website URL">
+            </div>
+            <div class="form-group inline">
+                <label for="industry">Industry</label>
+                <select id="industry" name="industry" required>
+                    <option value="">Select Industry</option>
+                    <option value="Automotive">Automotive</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+            <div class="form-group inline">
+                <label for="service">Service</label>
+                <select id="service" name="service" required>
+                    <option value="">Select Service</option>
+                    <option value="Web Development">Web Development</option>
+                    <option value="SEO">SEO</option>
+                    <option value="Marketing">Marketing</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+            <div class="form-group inline">
+                <label for="mode">Mode</label>
+                <select id="mode" name="mode" required>
+                    <option value="Phone Call">Phone Call</option>
+                    <option value="Virtual Meeting">Virtual Meeting</option>
+                    <option value="Email">Email</option>
+                </select>
+            </div>
+            
+            <div class="form-group inline">
+                <label for="datetime">Date and Time (Your Timezone: <span id="timezone"></span>)</label>
+                <input type="text" id="datetime" name="datetime" placeholder="Select Date and Time" required>
+            </div>
+    
+            <div class="form-group full-width">
+                <label for="notes">Notes or Materials You Want Us to Look Through</label>
+                <textarea id="notes" name="notes" rows="4" placeholder="Enter Your Notes or Materials"></textarea>
+            </div>
+            <div class="form-group full-width">
+                <button type="button" id="submitBtn" class="btn">Schedule Meeting</button>
+            </div>
+            <div class="loading" id="loading">
+                <img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" alt="Loading...">
+            </div>
+            <div class="success" id="success">
+                <p>Meeting scheduled successfully!</p>
+                <p>Your meeting is scheduled for <span id="meetingDateTime"></span> <span id="meetingTimeZone"></span>. Your meeting ID is: <span id="meetingId"></span></p>
+            </div>
+            
+        </form>
+    </div>
+    
+    <script>
+document.getElementById('submitBtn').addEventListener('click', function() {
+    document.getElementById('loading').style.display = 'block';
+
+    // Fetch the user's IP address
+    fetch('https://api64.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+            const ip = data.ip;
+
+            // Include the IP address in the form data
+            const formData = new FormData(document.getElementById('meetingForm'));
+            formData.append('ip', ip);
+
+            // Simulate form submission (replace this with actual form submission logic)
+            setTimeout(function() {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('success').style.display = 'block';
+                document.getElementById('meetingId').innerText = generateMeetingId();
+            }, 500); // Simulating a 2-second delay for the loading animation
+        })
+        .catch(error => {
+            console.error('Error fetching IP address:', error);
+        });
+});
+
+
+        function generateMeetingId() {
+            // Generate a random meeting ID (for demonstration purposes)
+            return Math.random().toString(36).substr(2, 9);
+        }
+
+        flatpickr("#datetime", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+        });
+
+        // Get the user's timezone based on their IP address
+fetch('https://ipapi.co/json/')
+    .then(response => response.json())
+    .then(data => {
+        const timezone = data.timezone;
+        document.getElementById('timezone').innerText = moment.tz(timezone).format('z');
+    })
+    .catch(error => console.error('Error:', error));
+
+
+    </script>
+</body>
+</html>
