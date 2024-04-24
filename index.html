@@ -222,7 +222,7 @@ document.getElementById('submitBtn').addEventListener('click', function() {
     const formData = new FormData(document.getElementById('meetingForm'));
     formData.append('timezone', timezone); 
 
-    fetch('https://us-central1-form-submission-418811.cloudfunctions.net/submitDataToSheet', {
+    fetch('https://script.google.com/macros/s/AKfycbzADLDxDBzz5KEpCn_m0dHExMNY2XbmxGVOjvrY3VVKMMKS7240zaShcJqodoGwzCGi/exec', {
         method: 'POST',
         body: formData
     })
